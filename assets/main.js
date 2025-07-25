@@ -1,42 +1,48 @@
-async function loadPatches() {
-  const response = await fetch('/data/patches.json');
-  const patches = await response.json();
-  const list = document.getElementById('patchList');
-  const searchInput = document.getElementById('search');
+document.addEventListener("DOMContentLoaded", () => {
+  const patchList = document.getElementById("patchList");
 
-  function render(filtered) {
-    list.innerHTML = '';
-    filtered.forEach(patch => {
-      const el = document.createElement('div');
-      el.className = 'p-4 bg-zinc-800 rounded shadow';
+  fetch("/data/patches.json")
+    .then(res => res.json())
+    .then(patches => {
+      patches.forEach(patch => {
+        const patchCard = document.createElement("div");
+        patchCard.className = "bg-zinc-800 p-4 rounded shadow";
 
-      const tags = patch.tags.map(tag => `<span class="bg-zinc-700 text-xs px-2 py-1 rounded mr-2">${tag}</span>`).join('');
-      const links = patch.download_links.map(link => `<a href="${link.url}" class="underline mr-4" target="_blank">${link.label}</a>`).join('');
+        patchCard.innerHTML = `
+          <h2 class="text-xl font-semibold">${patch.title}</h2>
+          <p><strong>By:</strong> ${patch.developer}</p>
+          <p><strong>Platform:</strong> ${patch.platform}</p>
+          <p class="mt-2">${patch.description}</p>
 
-      el.innerHTML = `
-        <h2 class="text-lg font-semibold">${patch.title}</h2>
-        <p class="text-sm text-zinc-400 mb-1">By ${patch.developer} • ${patch.platform}</p>
-        <p class="mb-2">${patch.description}</p>
-        <div class="mb-2">${tags}</div>
-        <p class="mb-2"><strong>Instructions:</strong> ${patch.instructions}</p>
-        <div class="mb-2">${links}</div>
-        <p class="text-xs text-zinc-500">Added: ${patch.date_added}</p>
-      `;
-      list.appendChild(el);
+          <button class="mt-3 text-sm text-blue-400 underline" type="button">Show Installation Instructions</button>
+          <div class="instructions mt-2 hidden whitespace-pre-line">${patch.instructions}</div>
+
+          <div class="mt-3">
+            <strong>Download:</strong>
+            <ul class="list-disc list-inside">
+              ${patch.download_links.map(dl => `<li><a href="${dl.url}" target="_blank" class="text-blue-400 underline">${dl.label}</a></li>`).join('')}
+            </ul>
+          </div>
+        `;
+
+        // Toggle instructions visibility
+        const btn = patchCard.querySelector("button");
+        const instr = patchCard.querySelector(".instructions");
+        btn.addEventListener("click", () => {
+          if (instr.classList.contains("hidden")) {
+            instr.classList.remove("hidden");
+            btn.textContent = "Hide Installation Instructions";
+          } else {
+            instr.classList.add("hidden");
+            btn.textContent = "Show Installation Instructions";
+          }
+        });
+
+        patchList.appendChild(patchCard);
+      });
+    })
+    .catch(err => {
+      patchList.textContent = "Failed to load patches.";
+      console.error(err);
     });
-  }
-
-  render(patches);
-
-  searchInput.addEventListener('input', () => {
-    const q = searchInput.value.toLowerCase();
-    const filtered = patches.filter(p =>
-      p.title.toLowerCase().includes(q) ||
-      p.platform.toLowerCase().includes(q) ||
-      p.tags.join(' ').toLowerCase().includes(q)
-    );
-    render(filtered);
-  });
-}
-
-loadPatches();
+});
