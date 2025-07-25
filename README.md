@@ -35,9 +35,7 @@ If you’ve created a patch and want to add it to the index:
   ],
   "date_added": "YYYY-MM-DD"
 }
-
-Legal Notice
+## Legal Notice
 
 This repository only indexes patches and links to external files. All patch files are hosted by their creators or trusted third parties. Use patches responsibly and ensure you have the legal right to apply them.
 
-Thank you for contributing to the Game Patch Index!
