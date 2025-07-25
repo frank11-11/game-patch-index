@@ -1,0 +1,15 @@
+[
+  {
+    "title": "Crystal Bloom: Audio Restoration Patch",
+    "developer": "BloomSoft",
+    "game_url": "https://example.com/crystal-bloom",
+    "platform": "Windows",
+    "tags": ["Audio", "Restoration"],
+    "description": "Restores original voice files removed in the release version.",
+    "instructions": "Unzip into the game directory and overwrite when prompted.",
+    "download_links": [
+      { "label": "Mirror 1", "url": "https://mega.nz/example1" }
+    ],
+    "date_added": "2025-07-25"
+  }
+]
